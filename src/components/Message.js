@@ -1,7 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
-import ReactDOM from "react-dom";
-import { useCookies } from "react-cookie";
 
 const MessagesContainer = styled.div`
   display: flex;
@@ -59,10 +57,9 @@ const MessagesContainer = styled.div`
   }
 `;
 const Message = ({ message }) => {
-  const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+  const expression = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
   const URLregex = new RegExp(expression);
   const backTicks = new RegExp(/```/);
-  const [cookies] = useCookies();
 
   console.log(message);
 

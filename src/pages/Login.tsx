@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useHistory } from "react-router-dom";
-var url = require("url");
 
 const Login = () => {
   const [cookies, setCookie] = useCookies();

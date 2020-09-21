@@ -70,7 +70,7 @@ const HomeContainer = styled.div`
 
 const Home = () => {
   const [cookies, setCookie] = useCookies();
-  const [response, setResponse] = useState("");
+  // const [response, setResponse] = useState("");
   const [messages, setMessages] = useState([]);
 
   const inputEl = useRef(null);
@@ -79,9 +79,9 @@ const Home = () => {
   const socket = io(ENDPOINT);
 
   useEffect(() => {
-    socket.on("connected", (data) => {
-      setResponse(data);
-    });
+    // socket.on("connected", (data) => {
+    //   setResponse(data);
+    // });
 
     socket.on("chat message", (data) => {
       setMessages([...messages, data]);
@@ -97,6 +97,7 @@ const Home = () => {
   const logout = () => {
     setCookie("token", "");
     setCookie("username", "");
+    setCookie("img", "");
   };
 
   const sendMessage = (e) => {
@@ -136,8 +137,6 @@ const Home = () => {
       </form>
 
       <OnlineUsers />
-
-      {/* <button onClick={logout}>Logout</button> */}
     </HomeContainer>
   );
 };
