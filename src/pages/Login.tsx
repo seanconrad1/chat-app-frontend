@@ -9,14 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState("%LGF&JdWN7Apf01");
 
   const submit = async () => {
-    let response = await fetch("http://localhost:5000/validateLogin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({ username, password }), // body data type must match "Content-Type" header
-    });
+    let response = await fetch(
+      "https://nodejs-chat-squad.herokuapp.com/validateLogin",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({ username, password }), // body data type must match "Content-Type" header
+      }
+    );
 
     const result = await response.json();
     if (result.token && result.username) {
