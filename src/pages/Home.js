@@ -75,7 +75,7 @@ const Home = () => {
 
   const inputEl = useRef(null);
 
-  const ENDPOINT = "https://nodejs-chat-squad.herokuapp.com:5000";
+  const ENDPOINT = "https://nodejs-chat-squad.herokuapp.com";
   const socket = io(ENDPOINT);
 
   useEffect(() => {
