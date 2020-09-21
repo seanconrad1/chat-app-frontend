@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { useCookies } from "react-cookie";
+import socketIOClient from "socket.io-client";
 
 function App() {
+  const [cookies] = useCookies();
+
+  const getSession = () => {
+    const jwt = cookies.token;
+
+    let session;
+    try {
+      if (jwt) {
+        const base64Url = jwt.split(".")[1];
+        const base64 = base64Url.replace("-", "+").replace("_", "/");
+        // what is window.atob ?
+        // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob
+        session = JSON.parse(window.atob(base64));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return session;
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route
+          path="/"
+          render={() => (getSession() ? <Home /> : <Login />)}
+        ></Route>
+      </Switch>
+    </Router>
   );
 }
+
+// function PrivateRoute({ component: Component, ...rest }) {
+//   return (
+//     <Route
+//       {...rest}
+//       render={(props) =>
+//         fakeAuth.isAuthenticated ? (
+//           <Component {...props} />
+//         ) : (
+//           <Redirect
+//             to={{
+//               pathname: "/login",
+//               state: { from: props.location },
+//             }}
+//           />
+//         )
+//       }
+//     />
+//   );
+// }
 
 export default App;
