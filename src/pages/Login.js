@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <div>
-      Login:
+      Login
       <input
         name="username"
         value={username}
