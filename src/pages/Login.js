@@ -3,8 +3,8 @@ import { useCookies } from "react-cookie";
 
 const Login = () => {
   const [cookies, setCookie] = useCookies();
-  const [username, setUsername] = useState("sean");
-  const [password, setPassword] = useState("%LGF&JdWN7Apf01");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const submit = async () => {
     let response = await fetch(
