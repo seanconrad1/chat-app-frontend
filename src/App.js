@@ -7,8 +7,6 @@ import { useCookies } from "react-cookie";
 function App() {
   const [cookies] = useCookies();
 
-  console.log(process.env.NODE_ENV);
-
   const getSession = () => {
     const jwt = cookies.token;
 

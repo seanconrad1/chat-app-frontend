@@ -61,7 +61,7 @@ const Message = ({ message }) => {
   const URLregex = new RegExp(expression);
   const backTicks = new RegExp(/```/);
 
-  console.log(message);
+  console.log("getting to messages");
 
   if (message.message.match(backTicks)) {
     let code = message.message.split("```")[1];

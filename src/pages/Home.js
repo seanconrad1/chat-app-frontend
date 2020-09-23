@@ -4,6 +4,9 @@ import styled from "styled-components";
 import io from "socket.io-client";
 import Message from "../components/Message";
 import OnlineUsers from "../containers/OnlineUsers";
+import getURL from "../utils/config";
+import useSocket from "use-socket.io-client";
+import { useImmer } from "use-immer";
 
 const HomeContainer = styled.div`
   font-family: 400 13.3333px Arial;
@@ -70,31 +73,44 @@ const HomeContainer = styled.div`
 
 const Home = () => {
   const [cookies, setCookie] = useCookies();
-  // const [response, setResponse] = useState("");
-  const [messages, setMessages] = useState([]);
-
   const inputEl = useRef(null);
+  const url = getURL(process.env.NODE_ENV);
+  const [socket] = useSocket(url);
+  const [messages, setMessages] = useImmer([]);
+  const [onlineUsers, setOnline] = useImmer([]);
 
-  const ENDPOINT = "https://nodejs-chat-squad.herokuapp.com";
-  const socket = io(ENDPOINT);
+  socket.connect();
 
   useEffect(() => {
-    // socket.on("connected", (data) => {
-    //   setResponse(data);
-    // });
+    socket.emit("join");
 
-    socket.on("chat message", (data) => {
-      setMessages([...messages, data]);
-
-      window.scrollTo(0, document.body.scrollHeight);
+    socket.on("chat message", (msg) => {
+      setMessages((draft) => {
+        draft.push(msg);
+      });
     });
 
-    // CLEAN UP THE EFFECT
-    return () => socket.disconnect();
-    //
-  }, [messages, socket]);
+    socket.on("online-users", (people) => {
+      setOnline((draft) => {
+        draft.push(...people);
+      });
+    });
+
+    socket.on("user-disconnected", (people) => {
+      console.log(people);
+      setOnline((draft) => {
+        draft.pop(people);
+      });
+    });
+
+    return () => {};
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, 0);
+
+  console.log("WHAT", onlineUsers);
 
   const logout = () => {
+    socket.disconnect();
     setCookie("token", "");
     setCookie("username", "");
     setCookie("img", "");
@@ -103,7 +119,7 @@ const Home = () => {
   const sendMessage = (e) => {
     e.preventDefault();
     if (inputEl.current.value) {
-      socket.emit("chat message", {
+      socket.emit("message", {
         message: inputEl.current.value,
         user: cookies.username,
         img: cookies.img,
@@ -111,10 +127,6 @@ const Home = () => {
       });
       inputEl.current.value = "";
     }
-  };
-
-  const handlePaste = (e) => {
-    console.log(e.clipboardData.getData("text").split(" ").join());
   };
 
   return (
@@ -132,11 +144,10 @@ const Home = () => {
           placeholder="Message..."
           autoComplete="off"
           ref={inputEl}
-          onPaste={(e) => handlePaste(e)}
         />
       </form>
 
-      <OnlineUsers />
+      <OnlineUsers users={onlineUsers} />
     </HomeContainer>
   );
 };

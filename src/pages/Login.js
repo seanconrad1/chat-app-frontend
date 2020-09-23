@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import getURL from "../utils/config";
 
 const Login = () => {
+  const url = getURL(process.env.NODE_ENV);
   const [cookies, setCookie] = useCookies();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(
+    process.env.NODE_ENV === "development" ? "sean" : ""
+  );
+  const [password, setPassword] = useState(
+    process.env.NODE_ENV === "development" ? "%LGF&JdWN7Apf01" : ""
+  );
 
   const submit = async () => {
-    let response = await fetch(
-      "https://nodejs-chat-squad.herokuapp.com/validateLogin",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({ username, password }), // body data type must match "Content-Type" header
-      }
-    );
+    let response = await fetch(`${url}validateLogin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({ username, password }), // body data type must match "Content-Type" header
+    });
 
     const result = await response.json();
     if (result.token && result.username) {
