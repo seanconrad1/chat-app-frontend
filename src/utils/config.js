@@ -1,8 +1,8 @@
 const getURL = (env) => {
   if (env === "development") {
-    return "http://localhost:5001/";
+    return "http://localhost:3000/";
   } else if (env === "production") {
-    return "https://nodejs-chat-squad.herokuapp.com/";
+    return "http://167.172.244.231:5000/";
   }
 };
 

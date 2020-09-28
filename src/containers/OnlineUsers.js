@@ -2,14 +2,16 @@ import React from "react";
 import styled from "styled-components";
 
 const OnlineUsersContainer = styled.div`
-  width: 14rem;
+  width: 14em;
   background: rgb(33, 37, 43);
   height: 100%;
+  position: fixed;
+  z-index: 1;
 
   #title {
-    padding: 2rem;
+    padding: 1.5em;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 1.2em;
   }
   #users-container {
     margin-left: 1rem;
@@ -18,11 +20,12 @@ const OnlineUsersContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    font-size: 1.5em;
   }
   #green-orb {
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
     background-color: rgb(99, 242, 130);
     margin-right: 1rem;
   }
