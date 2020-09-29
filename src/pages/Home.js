@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import OnlineUsers from "../containers/OnlineUsers";
 import { useImmer } from "use-immer";
 import { socket } from "../service/socket";
+import CryptoJS from "crypto-js";
 
 const HomeContainer = styled.div`
   font-family: 400 13.3333px Arial;
@@ -99,12 +100,15 @@ const Home = () => {
 
     socket.once("connect", (socketConn) => {
       socket.on("chat message", (msg) => {
+        const bytes = CryptoJS.AES.decrypt(msg, "xSmA7^&&S8nXka63$s#x");
+        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
         setMessages((draft) => {
-          draft.push(msg);
+          draft.push(decryptedData);
         });
         var options = {
-          body: msg.message,
-          icon: `${msg.img}   auto=compress&cs=tinysrgb&dpr=1&w=500`,
+          body: decryptedData.message,
+          icon: `${decryptedData.img}   auto=compress&cs=tinysrgb&dpr=1&w=500`,
           dir: "ltr",
         };
         var notification = new Notification("Chat Squad", options);

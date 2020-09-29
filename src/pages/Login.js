@@ -5,14 +5,13 @@ import styled from "styled-components";
 
 const LoginContainer = styled.div`
   overflow: hidden;
-  position: absolute;
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center; /*centers items on the line (the x-axis by default)*/
   align-items: center;
   flex-direction: column;
   background: rgb(40, 44, 52);
+  height: 100vh;
 
   button {
     background: rgb(250, 113, 136);
@@ -79,7 +78,7 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     let response;
-    response = await fetch(`/validateLogin`, {
+    response = await fetch(`${url}validateLogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
