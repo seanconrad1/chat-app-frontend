@@ -68,11 +68,12 @@ const Login = () => {
   const url = getURL(process.env.NODE_ENV);
   const [cookies, setCookie] = useCookies();
   const [error, setError] = useState("");
+
   const [username, setUsername] = useState(
-    process.env.NODE_ENV === "development" ? "" : ""
+    process.env.NODE_ENV === "development" ? "sean" : ""
   );
   const [password, setPassword] = useState(
-    process.env.NODE_ENV === "development" ? "" : ""
+    process.env.NODE_ENV === "development" ? "%LGF&JdWN7Apf01" : ""
   );
 
   const submit = async (e) => {
@@ -94,9 +95,9 @@ const Login = () => {
     }
 
     if (result.token && result.username) {
-      setCookie("token", result.token, { path: "/" });
       setCookie("username", result.username, { path: "/" });
       setCookie("img", result.img, { path: "/" });
+      setCookie("token", result.token, { path: "/" });
     }
   };
 

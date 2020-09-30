@@ -40,7 +40,7 @@ const OnlineUsers = ({ users }) => {
 
   return (
     <OnlineUsersContainer>
-      <div id="title">members - </div>
+      <div id="title">ONLINE - </div>
 
       <div id="users-container">
         {filteredUsers.map((user, key) => {

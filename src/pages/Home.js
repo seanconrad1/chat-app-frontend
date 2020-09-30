@@ -92,56 +92,51 @@ const Home = () => {
       Notification.requestPermission();
     }
 
-    socket.emit("join");
-
     const eventHandler = () => setConnected(true);
-
     socket.on("WELCOME_FROM_SERVER", eventHandler);
 
-    socket.once("connect", (socketConn) => {
-      socket.on("chat message", (msg) => {
-        const bytes = CryptoJS.AES.decrypt(msg, "xSmA7^&&S8nXka63$s#x");
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    socket.emit("join", cookies);
+    socket.on("chat message", (msg) => {
+      const bytes = CryptoJS.AES.decrypt(msg, "xSmA7^&&S8nXka63$s#x");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
-        setMessages((draft) => {
-          draft.push(decryptedData);
-        });
-        var options = {
-          body: decryptedData.message,
-          icon: `${decryptedData.img}   auto=compress&cs=tinysrgb&dpr=1&w=500`,
-          dir: "ltr",
-        };
-        var notification = new Notification("Chat Squad", options);
-        scrollToBottom();
+      setMessages((draft) => {
+        draft.push(decryptedData);
       });
+      var options = {
+        body: decryptedData.message,
+        icon: `${decryptedData.img}   auto=compress&cs=tinysrgb&dpr=1&w=500`,
+        dir: "ltr",
+      };
+      new Notification("Chat Squad", options);
+      scrollToBottom();
+    });
 
-      socket.on("online-users", (people) => {
-        setOnline((draft) => {
-          draft.push(...people);
-        });
+    socket.on("online-users", (people) => {
+      setOnline((draft) => {
+        draft.push(...people);
       });
+    });
 
-      socket.on("user-typing", (user) => {
-        console.log(user);
-        setUserTyping(user);
-      });
+    socket.on("user-typing", (user) => {
+      setUserTyping(user);
+    });
 
-      socket.on("user-stopped-typing", (user) => {
-        setUserTyping("");
-      });
+    socket.on("user-stopped-typing", (user) => {
+      setUserTyping("");
+    });
 
-      socket.on("user-disconnected", (people) => {
-        setOnline((draft) => {
-          draft.pop(people);
-        });
+    socket.on("user-disconnected", (people) => {
+      setOnline((draft) => {
+        draft.pop(people);
       });
     });
 
     return () => {
-      socket.off("disconnected", eventHandler);
+      socket.disconnect();
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, 0);
+  }, []);
 
   const logout = () => {
     socket.disconnect();
@@ -163,8 +158,8 @@ const Home = () => {
     }
   };
 
-  var typing = false;
-  var timeout = undefined;
+  let typing = false;
+  let timeout = undefined;
 
   const timeoutFunction = () => {
     typing = false;
@@ -173,9 +168,9 @@ const Home = () => {
 
   const onKeyDownNotEnter = (e) => {
     if (e.key !== "Enter") {
-      if (typing == false) {
+      if (typing === false) {
         typing = true;
-        socket.emit("typing");
+        socket.emit("typing", cookies);
         timeout = setTimeout(timeoutFunction, 5000);
       } else {
         clearTimeout(timeout);
@@ -201,7 +196,6 @@ const Home = () => {
         )}
         <div style={{ float: "left", clear: "both" }} ref={messagesEl}></div>
       </div>
-
       <form onSubmit={sendMessage}>
         <input
           name="message"
@@ -213,7 +207,6 @@ const Home = () => {
           onKeyDown={onKeyDownNotEnter}
         />
       </form>
-
       <OnlineUsers users={onlineUsers} />
     </HomeContainer>
   );
